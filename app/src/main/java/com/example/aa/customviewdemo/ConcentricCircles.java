@@ -77,14 +77,15 @@ public class ConcentricCircles extends View {
         mDrawPointPaint.setStyle(Paint.Style.FILL);
 
         mBubblePaint = new Paint();
-        mBubblePaint.setColor(Color.GREEN);
+        mBubblePaint.setColor(Color.BLACK);
         mBubblePaint.setAntiAlias(true);
         mBubblePaint.setStyle(Paint.Style.FILL);
 
         mTextPaint = new Paint();
-        mTextPaint.setColor(Color.CYAN);
+        mTextPaint.setColor(Color.WHITE);
         mTextPaint.setAntiAlias(true);
-        mTextPaint.setStyle(Paint.Style.STROKE);
+        mTextPaint.setTextSize(14);
+        mTextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
     }
 
     private void initBubbleRect() {
@@ -126,16 +127,27 @@ public class ConcentricCircles extends View {
             canvas.drawCircle(mCenter.first, mCenter.second, mRadii.get(i), mDrawCirclePaint);
         }
 
-        //draw points
+        //draw points and bubbles
         for (int i = 0, size = mPoints == null ? 0 : mPoints.size(); i < size; i++) {
             Pair<Integer, Integer> pair = mPoints.get(i);
             canvas.drawCircle(pair.first, pair.second, mPointRadius, mDrawPointPaint);
 
+            //save current canvas
             canvas.save();
+
+            //translate the canvas to draw bubble and text
             canvas.translate(pair.first - mBubbleLeft, pair.second - mBubbleTop);
+
             //add click listeners on these RoundedRect
             canvas.drawRoundRect(mBubbleRectF, mBubbleCornerRadius, mBubbleCornerRadius, mBubblePaint);
+
+            //draw triangle head of bubble
             canvas.drawPath(mBubbleTrianglePath, mBubblePaint);
+
+            //draw text on canvas
+            canvas.drawText("Hi! How R U", 10, 32, mTextPaint);
+
+            //restore canvas position
             canvas.restore();
         }
     }
